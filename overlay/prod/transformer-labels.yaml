@@ -1,0 +1,21 @@
+apiVersion: builtin
+kind: LabelTransformer
+metadata:
+  name: labels-transformer
+labels:
+  environment: production
+  app.kubernetes.io/part-of: minecraft-server
+  app.kubernetes.io/managed-by: github
+  app.kubernetes.io/created-by: controller-manager
+fieldSpecs:
+- path: metadata/labels
+  create: true
+- path: spec/selector
+  kind: Service
+  create: true
+- path: spec/selector/matchLabels
+  kind: Deployment
+  create: true
+- path: spec/template/metadata/labels
+  kind: Deployment
+  create: true
