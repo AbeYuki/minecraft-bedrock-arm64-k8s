@@ -49,6 +49,26 @@ correct-player-movement=false
 server-authoritative-block-breaking=false
 EOF
 ```
+```
+vi kustomization.yaml
+```
+Modify Storage, storageClassName
+```
+patchesStrategicMerge:
+- |-
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: frontend-app01
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: <MODIFY>Gi
+    storageClassName: <MODIFY>
+    volumeMode: Filesystem
+```
 
 ```
 kubectl apply -f namespace.yaml
