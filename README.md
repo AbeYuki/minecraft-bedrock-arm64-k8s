@@ -65,7 +65,7 @@ patchesStrategicMerge:
     - ReadWriteMany
     resources:
       requests:
-        storage: <MODIFY>Gi
+        storage: <MODIFY>
     storageClassName: <MODIFY>
     volumeMode: Filesystem
 ```
