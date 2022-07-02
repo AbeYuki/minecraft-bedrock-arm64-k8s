@@ -37,3 +37,20 @@ patchesStrategicMerge:
         storage: 1Gi
     storageClassName: longhorn
     volumeMode: Filesystem
+- |-
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: frontend-app01
+    labels:
+      app.kubernetes.io: bedrock
+  spec:
+    type: NodePort
+    ports:
+      - name: udp
+        protocol: UDP
+        nodePort: 32767
+        port: 19132
+        targetPort: 19132
+    selector:
+      app.kubernetes.io/name: bedrock
