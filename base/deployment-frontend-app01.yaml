@@ -86,8 +86,8 @@ spec:
         volumeMounts:
         - name: worlds
           mountPath: /bedrock-server/worlds/
-        - name: configmap-config01
-          mountPath: /tmp
+#        - name: configmap-config01
+#          mountPath: /tmp
       volumes:
       - name: worlds
         persistentVolumeClaim:
