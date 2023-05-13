@@ -9,7 +9,7 @@ spec:
   ports:
     - name: udp
       protocol: UDP
-      nodePort: 32767
+      nodePort: 19132
       port: 19132
       targetPort: 19132
   selector:
@@ -25,7 +25,7 @@ spec:
       storage: 1Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: longhorn
 ---
 apiVersion: apps/v1
@@ -51,10 +51,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: beta.kubernetes.io/arch
+              - key: node-role.kubernetes.io/controlplane
                 operator: In
                 values:
-                - arm64
+                - "true"
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
@@ -72,17 +72,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "0.25"
+            cpu: "0.5"
             memory: 500Mi
           limits:
             cpu: "2"
             memory: 5Gi
-        command: ["bash", "-c"]
-        args:
-        - cat /tmp/allowlist.json > allowlist.json &&
-            cat /tmp/permissions.json > permissions.json &&
-            cat /tmp/server.properties > server.properties &&
-            box64 /bedrock-server/bedrock_server
         env:
         - name: TZ
           value: Asia/Tokyo
@@ -99,12 +93,12 @@ spec:
       - name: worlds
         persistentVolumeClaim:
           claimName: frontend-app01
-      - name: configmap-config01
-        projected:
-          sources:
-          - configMap:
-              name: configmap-allowlist-config01
-          - configMap:
-              name: configmap-permissins-config01
-          - configMap:
-              name: configmap-server-properties-config01
+#      - name: configmap-config01
+#        projected:
+#          sources:
+#          - configMap:
+#              name: configmap-allowlist-config01
+#          - configMap:
+#              name: configmap-permissins-config01
+#          - configMap:
+#              name: configmap-server-properties-config01
