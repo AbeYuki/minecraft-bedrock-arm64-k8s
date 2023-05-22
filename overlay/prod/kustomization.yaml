@@ -48,6 +48,7 @@ patchesStrategicMerge:
     type: NodePort
     ports:
       - name: udp
+        nodePort: 32767
         protocol: UDP
         port: 19132
         targetPort: 19132

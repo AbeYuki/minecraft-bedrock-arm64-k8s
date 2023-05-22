@@ -9,6 +9,7 @@ spec:
   ports:
     - name: udp
       protocol: UDP
+      nodePort: 32767
       port: 19132
       targetPort: 19132
   selector:
