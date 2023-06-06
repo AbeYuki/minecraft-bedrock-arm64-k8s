@@ -73,8 +73,8 @@ patchesStrategicMerge:
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: "2"
-              memory: 3Gi
+              cpu: 1000m
+              memory: 2000Mi
             limits:
-              cpu: "3"
-              memory: 5Gi
+              cpu: 2000m
+              memory: 2000Mi
