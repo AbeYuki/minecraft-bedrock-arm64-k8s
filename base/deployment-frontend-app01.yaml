@@ -47,14 +47,6 @@ spec:
         app.kubernetes.io/name: bedrock
     spec:
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: node-role.kubernetes.io/controlplane
-                operator: In
-                values:
-                - "true"
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
@@ -72,10 +64,10 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: "0.5"
-            memory: 500Mi
-          limits:
             cpu: "2"
+            memory: 3Gi
+          limits:
+            cpu: "3"
             memory: 5Gi
         env:
         - name: TZ

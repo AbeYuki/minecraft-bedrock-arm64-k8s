@@ -54,3 +54,27 @@ patchesStrategicMerge:
         targetPort: 19132
     selector:
       app.kubernetes.io/name: bedrock
+- |-
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: frontend-app01
+    labels:
+      app.kubernetes.io/name: bedrock
+  spec:
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: bedrock
+      spec:
+        containers:
+        - name: frontend-app01
+          image: frontend-app01
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 2000Mi
+            limits:
+              cpu: 2000m
+              memory: 4000Mi
