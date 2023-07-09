@@ -7,19 +7,19 @@ cd minecraft-bedrock-arm64-k8s/overlay/dev/
 ```
 
 ```
-cat <<'EOF'> allowlist.json 
+cat <<'EOF'> secret/allowlist.json 
 []
 EOF
 ```
 
 ```
-cat <<'EOF'> permissions.json 
+cat <<'EOF'> secret/permissions.json 
 []
 EOF
 ```
 
 ```
-cat <<'EOF'> server.properties
+cat <<'EOF'> secret/server.properties
 server-name=Dedicated Server
 gamemode=survival
 force-gamemode=false

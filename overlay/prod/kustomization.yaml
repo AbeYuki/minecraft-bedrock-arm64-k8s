@@ -6,16 +6,6 @@ bases:
 transformers:
 - transformer-labels.yaml
 - transformer-suffixprefix.yaml
-#configMapGenerator:
-#- name: configmap-allowlist-config01
-#  files:
-#  - allowlist.json
-#- name: configmap-permissins-config01
-#  files:
-#  - permissions.json
-#- name: configmap-server-properties-config01
-#  files:
-#  - server.properties
 images:
   - name: frontend-app01
     newName: abeyuki/minecraft-bedrock-arm64

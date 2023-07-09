@@ -62,6 +62,13 @@ spec:
       - name: frontend-app01
         image: frontend-app01
         imagePullPolicy: Always
+        command: ["sh", "-c"]
+        args: 
+          - |
+            cat /tmp/allowlist.json > /bedrock-server/allowlist.json
+            cat /tmp/permissions.json > /bedrock-server/permissions.json
+            cat /tmp/server.properties > /bedrock-server/server.properties
+            box64 bedrock_server
         resources:
           requests:
             cpu: "2"
@@ -77,20 +84,39 @@ spec:
           containerPort: 19132
           protocol: UDP
         volumeMounts:
-        - name: worlds
-          mountPath: /bedrock-server/worlds/
-#        - name: configmap-config01
-#          mountPath: /tmp
+          - name: worlds
+            mountPath: /bedrock-server/worlds/
+          - name: allowlist-config
+            mountPath: /tmp/allowlist.json
+            readOnly: true
+            subPath: allowlist.json
+          - name: permissions-config
+            mountPath: /tmp/permissions.json
+            readOnly: true
+            subPath: permissions.json
+          - name: server-properties-config
+            mountPath: /tmp/server.properties
+            readOnly: true
+            subPath: server.properties
       volumes:
-      - name: worlds
-        persistentVolumeClaim:
-          claimName: frontend-app01
-#      - name: configmap-config01
-#        projected:
-#          sources:
-#          - configMap:
-#              name: configmap-allowlist-config01
-#          - configMap:
-#              name: configmap-permissins-config01
-#          - configMap:
-#              name: configmap-server-properties-config01
+        - name: worlds
+          persistentVolumeClaim:
+            claimName: frontend-app01
+        - name: allowlist-config
+          configMap:
+            name: configmap-allowlist-config01
+            items:
+              - key: allowlist.json
+                path: allowlist.json
+        - name: permissions-config
+          configMap:
+            name: configmap-permissions-config01
+            items:
+              - key: permissions.json
+                path: permissions.json
+        - name: server-properties-config
+          configMap:
+            name: configmap-server-properties-config01
+            items:
+              - key: server.properties
+                path: server.properties
