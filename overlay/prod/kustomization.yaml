@@ -9,7 +9,7 @@ transformers:
 images:
   - name: frontend-app01
     newName: abeyuki/minecraft-bedrock-arm64
-    newTag: "1.20.0.01"
+    newTag: "1.20.11.01"
 replicas:
 - name: frontend-app01
   count: 1
