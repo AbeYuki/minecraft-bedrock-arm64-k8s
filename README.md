@@ -77,3 +77,37 @@ kubectl apply -f namespace.yaml
 ```
 kubectl apply -k ./
 ```
+
+
+# backup
+
+backup with longhorn is not possible.  
+Restoring from backup fails to mount.  
+
+```
+NS=prod-minecraft
+POD_NAME=$(kubectl get pod -n $NS --template='{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+```
+
+To local
+```
+kubectl cp $NS/$POD_NAME:/bedrock-server/worlds ./bedrock_world_data_$(date +%Y%m%d)
+```
+
+To container
+```
+kubectl cp bedrock_world_data/ $NS/$POD_NAME:/bedrock-server/worlds
+```
+
+Login pod  
+```
+kubectl exec -it -n $NS pod/$POD_NAME -- bash
+```
+
+Restore
+```
+root@prod-minecraft-frontend-app01-001-b984468cd-q2qnc:/bedrock-server# cd worlds/
+root@prod-minecraft-frontend-app01-001-b984468cd-q2qnc:/bedrock-server/worlds# ls
+BedrockServer  bedrock_world_data_20230716  lost+found
+root@prod-minecraft-frontend-app01-001-b984468cd-q2qnc:/bedrock-server/worlds# cp -ar bedrock_world_data_20230716/BedrockServer/ ./
+```
