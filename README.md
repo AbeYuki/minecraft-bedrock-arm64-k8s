@@ -73,7 +73,9 @@ patchesStrategicMerge:
 ```
 kubectl apply -f namespace.yaml
 ```
-
+```
+kubectl apply -k secret/
+```
 ```
 kubectl apply -k ./
 ```
