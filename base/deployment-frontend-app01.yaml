@@ -22,11 +22,11 @@ metadata:
 spec:
   resources:
     requests:
-      storage: 1Gi
+      storage: 3Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn
+    - ReadWriteMany
+  storageClassName: nfs-g9-enp4s0-rwx
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -58,17 +58,29 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       imagePullSecrets:
         - name: docker-registry
+      initContainers:
+        - name: init-copy-config
+          image: alpine:3.20
+          command: ["sh","-c"]
+          args:
+            - |
+              set -eu
+              install -m 600 /config/server.properties   /bedrock-server/server.properties
+              install -m 600 /secrets/permissions.json   /bedrock-server/permissions.json
+              install -m 600 /secrets/allowlist.json     /bedrock-server/allowlist.json
+          volumeMounts:
+            - name: worlds
+              mountPath: /bedrock-server
+            - name: projected
+              mountPath: /config
+              readOnly: true
+            - name: permissions-allowlist
+              mountPath: /secrets
+              readOnly: true
       containers:
       - name: frontend-app01
         image: frontend-app01
         imagePullPolicy: Always
-        command: ["sh", "-c"]
-        args: 
-          - |
-            cat /tmp/allowlist.json > /bedrock-server/allowlist.json
-            cat /tmp/permissions.json > /bedrock-server/permissions.json
-            cat /tmp/server.properties > /bedrock-server/server.properties
-            box64 bedrock_server
         resources:
           requests:
             cpu: "2"
@@ -79,44 +91,32 @@ spec:
         env:
         - name: TZ
           value: Asia/Tokyo
+        - name: EULA
+          value: "true"
+        - name: BEDROCK_SERVER_VERSION
+          value: "1.21.102.1"
+        - name: BOX64_LD_LIBRARY_PATH
+          value: "/bedrock-server"
         ports:
         - name: bedrock
           containerPort: 19132
           protocol: UDP
         volumeMounts:
           - name: worlds
-            mountPath: /bedrock-server/worlds/
-          - name: allowlist-config
-            mountPath: /tmp/allowlist.json
-            readOnly: true
-            subPath: allowlist.json
-          - name: permissions-config
-            mountPath: /tmp/permissions.json
-            readOnly: true
-            subPath: permissions.json
-          - name: server-properties-config
-            mountPath: /tmp/server.properties
-            readOnly: true
-            subPath: server.properties
+            mountPath: /bedrock-server
       volumes:
         - name: worlds
           persistentVolumeClaim:
             claimName: frontend-app01
-        - name: allowlist-config
-          configMap:
-            name: configmap-allowlist-config01
-            items:
-              - key: allowlist.json
-                path: allowlist.json
-        - name: permissions-config
-          configMap:
-            name: configmap-permissions-config01
-            items:
-              - key: permissions.json
-                path: permissions.json
-        - name: server-properties-config
-          configMap:
-            name: configmap-server-properties-config01
-            items:
-              - key: server.properties
-                path: server.properties
+        - name: projected
+          projected:
+            sources:
+              - configMap:
+                  name: server-properties
+        - name: permissions-allowlist
+          projected:
+            sources:
+              - secret:
+                  name: permissions
+              - secret:
+                  name: allowlist
