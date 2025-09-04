@@ -92,7 +92,7 @@ spec:
         - name: EULA
           value: "true"
         - name: BEDROCK_SERVER_VERSION
-          value: "1.21.102.1"
+          value: "1.21.101.1"
         - name: BOX64_LD_LIBRARY_PATH
           value: "/bedrock-server"
         ports:
