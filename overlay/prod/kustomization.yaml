@@ -12,7 +12,7 @@ transformers:
 images:
   - name: frontend-app01
     newName: abeyuki/minecraft-bedrock-arm64
-    newTag: "fdb76d9"
+    newTag: "e195ac0"
 replicas:
 - name: frontend-app01
   count: 1
